@@ -1,3 +1,163 @@
+<?php
+declare(strict_types=1);
+
+/*
+ * Matrix Mayhem
+ * Student: Thirunavukkarasu Palaniappa
+ * Individual PHP multidimensional arrays assignment
+ */
+
+// Mission 1: Create the original 3 x 3 matrix.
+$original = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+];
+
+// Keep a separate working copy so the original remains unchanged.
+$modified = $original;
+
+// Mission 2: Read values at the requested coordinates.
+$topLeft = $original[0][0];
+$center = $original[1][1];
+$bottomRight = $original[2][2];
+
+// Mission 3: Change two values in the working copy.
+$modified[1][2] = 10;
+$modified[2][1] = 15;
+
+// Mission 4: Expand the modified matrix.
+$finalMatrix = $modified;
+$finalMatrix[2][] = 11;
+$finalMatrix[] = [10, 11, 12, 13];
+
+// Mission 5: Calculate row count, row lengths, cell count, and maximum.
+$rowCount = count($finalMatrix);
+$rowLengths = [];
+$totalCells = 0;
+$maxValue = null;
+
+foreach ($finalMatrix as $rowIndex => $row) {
+    $rowLengths[$rowIndex] = count($row);
+    $totalCells += count($row);
+
+    foreach ($row as $value) {
+        if ($maxValue === null || $value > $maxValue) {
+            $maxValue = $value;
+        }
+    }
+}
+
+// Mission 6: Render each matrix with nested foreach loops.
+function renderMatrix(array $rows, string $caption): void
+{
+    echo '<table class="matrix">';
+    echo '<caption>' . htmlspecialchars($caption, ENT_QUOTES, 'UTF-8') . '</caption>';
+    echo '<tbody>';
+
+    foreach ($rows as $row) {
+        echo '<tr>';
+
+        foreach ($row as $value) {
+            echo '<td>' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '</td>';
+        }
+
+        echo '</tr>';
+    }
+
+    echo '</tbody>';
+    echo '</table>';
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Matrix Mayhem | PHP Dashboard</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --page-bg: #eef3fa;
+            --ink: #17243a;
+            --muted: #53627a;
+            --blue: #173b80;
+            --accent: #2459d4;
+            --border: #cbd8ec;
+            --panel: #ffffff;
+            --tile: #e8eff9;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--ink);
+            font: 15px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .page-header,
+        .dashboard,
+        .page-footer {
+            width: min(100% - 32px, 1000px);
+            margin-inline: auto;
+        }
+
+        .page-header {
+            padding: 28px 0 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: var(--blue);
+            font-size: clamp(1.6rem, 3vw, 2rem);
+            line-height: 1.25;
+        }
+
+        .page-header p {
+            margin: 4px 0;
+            color: var(--muted);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .panel {
+            min-width: 0;
+            padding: 22px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: 0 5px 18px rgb(23 36 58 / 5%);
+        }
+
+        h2 {
+            margin: 0 0 18px;
+            color: var(--blue);
+            font-size: 1.25rem;
+        }
+
+        h3 {
+            margin: 22px 0 8px;
+            color: var(--blue);
+            font-size: 1rem;
+        }
+
+        h3:first-of-type { margin-top: 0; }
+
+        .matrix-wrap { overflow-x: auto; }
+
+        table.matrix {
+            border-collapse: collapse;
+            margin: 0 0 24px;
+            min-width: 192px;
+        }
+
         table.matrix caption {
             padding: 0 0 10px;
             text-align: left;
